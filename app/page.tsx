@@ -42,16 +42,16 @@ export default function Home() {
       >
         <CarouselContent>
           {[
-            <BarChartComponent />,
-            <AreaChartComponent />,
-            <LineChartComponent />,
-            <PieChartComponent />,
-            <RadarChartComponent />,
-            <RadialChartComponent />
-          ].map((component, index) => (
+            BarChartComponent,
+            AreaChartComponent,
+            LineChartComponent,
+            PieChartComponent,
+            RadarChartComponent,
+            RadialChartComponent
+          ].map((Component, index) => (
             <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
               <div className="p-1">
-                {component}
+                <Component />
               </div>
             </CarouselItem>
           ))}
