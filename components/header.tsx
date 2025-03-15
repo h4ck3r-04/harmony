@@ -2,6 +2,7 @@
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { SunIcon, MoonIcon, MenuIcon } from "lucide-react";
 import { Button } from "./ui/button";
 import { Sheet, SheetTrigger, SheetContent, SheetTitle } from "./ui/sheet";
@@ -12,10 +13,16 @@ import FadeContent from "./ui/fade-content";
 export default function Header() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
 
   if (!mounted) return null;
 
@@ -39,7 +46,7 @@ export default function Header() {
             <MoonIcon className="w-6 h-6 text-muted-foreground" />
           )}
         </Button>
-        <Sheet>
+        <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger>
             <MenuIcon className="w-6 h-6 text-muted-foreground" />
           </SheetTrigger>
@@ -57,18 +64,18 @@ export default function Header() {
                 { href: "/", label: "Home" },
                 { href: "/about", label: "About" },
                 { href: "/dashboard", label: "Dashboard" },
+                { href: "/integrations", label: "Integrations" },
                 { href: "/get-started", label: "Get Started" },
                 { href: "/login", label: "Login" },
-                { href: "", label: "Github" },
+                { href: "https://github.com/h4ck3r-04/harmony", label: "Github" },
               ].map(({ href, label }) => (
                 <FadeContent key={href} blur={true} duration={500} easing="ease-out" initialOpacity={0}>
-                  <Link href={href} className="relative text-lg group">
+                  <Link href={href} className="relative text-lg group" onClick={() => setIsOpen(false)}>
                     {label}
                   </Link>
                 </FadeContent>
               ))}
             </motion.div>
-
           </SheetContent>
         </Sheet>
       </div>
