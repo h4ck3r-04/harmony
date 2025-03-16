@@ -65,8 +65,6 @@ export default function Header() {
                 { href: "/about", label: "About" },
                 { href: "/dashboard", label: "Dashboard" },
                 { href: "/integrations", label: "Integrations" },
-                { href: "/get-started", label: "Get Started" },
-                { href: "/login", label: "Login" },
                 { href: "https://github.com/h4ck3r-04/harmony", label: "Github" },
               ].map(({ href, label }) => (
                 <FadeContent key={href} blur={true} duration={500} easing="ease-out" initialOpacity={0}>
