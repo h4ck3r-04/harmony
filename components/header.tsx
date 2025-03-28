@@ -7,6 +7,7 @@ import { Button } from "./ui/button";
 import { Sheet, SheetTrigger, SheetContent, SheetTitle } from "./ui/sheet";
 import { motion } from "framer-motion";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { SignedOut, SignInButton, SignedIn, UserButton } from "@clerk/nextjs";
 import FadeContent from "./ui/fade-content";
 
 export default function Header() {
@@ -23,12 +24,16 @@ export default function Header() {
     <div className="px-6 py-4 flex flex-row justify-between items-center">
       <span className="text-xl">Harmony</span>
       <div className="flex flex-row items-center space-x-2 ">
-        <Button className="hidden md:flex" variant="outline" asChild>
-          <Link href="/">Get Started</Link>
-        </Button>
-        <Button className="hidden md:flex" variant="outline" asChild>
-          <Link href="/">Login</Link>
-        </Button>
+        <SignedOut>
+          <Button className="flex" variant="outline" asChild>
+            <SignInButton />
+          </Button>
+        </SignedOut>
+        <SignedIn>
+          <Button className="flex" variant="outline" asChild>
+            <UserButton />
+          </Button>
+        </SignedIn>
         <Button
           variant="outline"
           onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
@@ -57,9 +62,7 @@ export default function Header() {
                 { href: "/", label: "Home" },
                 { href: "/about", label: "About" },
                 { href: "/dashboard", label: "Dashboard" },
-                { href: "/get-started", label: "Get Started" },
-                { href: "/login", label: "Login" },
-                { href: "", label: "Github" },
+                { href: "https://github.com/h4ck3r-04/harmony", label: "Github" },
               ].map(({ href, label }) => (
                 <FadeContent key={href} blur={true} duration={500} easing="ease-out" initialOpacity={0}>
                   <Link href={href} className="relative text-lg group">
