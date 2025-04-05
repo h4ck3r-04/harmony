@@ -17,6 +17,7 @@ export default function Dashboard() {
 
   return (
     <main className="min-h-[97vh] relative px-4">
+
       {/* Templates Section */}
       <div className="flex flex-col gap-4 mb-8">
         <h1 className="text-2xl py-2 border-b-[1px] border-accent-foreground/50">Templates</h1>

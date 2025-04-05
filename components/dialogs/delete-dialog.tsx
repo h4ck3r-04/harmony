@@ -11,7 +11,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/alert-dialog"
+} from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
 import { Trash2 } from "lucide-react"
 
