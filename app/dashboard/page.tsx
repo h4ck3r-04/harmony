@@ -5,14 +5,73 @@ import { LayoutGrid, List, MoreVertical, FileEdit, Trash2, Share2, FileText } fr
 import { useState } from "react"
 import { DeleteDialog } from "@/components/dialogs/delete-dialog";
 import { ShareDialog } from "@/components/dialogs/share-dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function Dashboard() {
   const [isRecentGridView, setIsRecentGridView] = useState(true);
   const [isSharedGridView, setIsSharedGridView] = useState(true);
+  const [isTemplateGridView, setIsTemplateGridView] = useState(true);
+  const [newProjectName, setNewProjectName] = useState("");
+  const [templateProjectName, setTemplateProjectName] = useState("");
+  const [existingProjects] = useState(["Untitled Project", "Untitled Project 1"]);
+
+  const getUniqueProjectName = (baseName: string) => {
+    let counter = 1;
+    let newName = baseName || "Untitled Project"; // Use "Untitled Project" if baseName is empty
+    while (existingProjects.includes(newName)) {
+      newName = `${baseName || "Untitled Project"} ${counter}`;
+      counter++;
+    }
+    return newName;
+  };
 
   const handleDelete = (docTitle: string) => {
     // Handle delete logic here
     console.log(`Deleting ${docTitle}`);
+  };
+
+  const handleCreateBlankProject = (e: React.FormEvent) => {
+    e.preventDefault();
+    const uniqueName = getUniqueProjectName(newProjectName);
+    console.log("Creating blank project:", uniqueName);
+    setNewProjectName("");
+  };
+
+  const handleCreateFromTemplate = (e: React.FormEvent) => {
+    e.preventDefault();
+    const uniqueName = getUniqueProjectName(templateProjectName);
+    console.log("Creating from template:", uniqueName);
+    setTemplateProjectName("");
+  };
+
+  const templates = {
+    all: [
+      { title: "Meeting Notes", description: "Standard format for meeting minutes and action items" },
+      { title: "Project Proposal", description: "Structured template for project pitches" },
+      { title: "Weekly Report", description: "Weekly progress and metrics report format" },
+      { title: "Marketing Plan", description: "Comprehensive marketing strategy template" },
+      { title: "Budget Template", description: "Financial planning and tracking template" },
+      { title: "Team Goals", description: "Team OKRs and goals tracking template" },
+      { title: "Product Roadmap", description: "Product development timeline template" },
+      { title: "Content Calendar", description: "Content planning and scheduling template" }
+    ],
+    business: [
+      { title: "Business Plan", description: "Complete business planning template" },
+      { title: "Invoice Template", description: "Professional invoice format" },
+      { title: "Proposal Template", description: "Business proposal format" }
+    ],
+    personal: [
+      { title: "Journal", description: "Personal journaling template" },
+      { title: "Goal Tracker", description: "Personal goals tracking template" },
+      { title: "Budget Planner", description: "Personal finance template" }
+    ],
+    education: [
+      { title: "Study Plan", description: "Academic study planning template" },
+      { title: "Research Paper", description: "Academic paper format" },
+      { title: "Lecture Notes", description: "Structured lecture notes template" }
+    ]
   };
 
   return (
@@ -34,7 +93,32 @@ export default function Dashboard() {
               <p className="text-sm text-muted-foreground">Create a fresh document to start writing from scratch</p>
             </CardContent>
             <CardFooter>
-              <Button>Create</Button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button>Create</Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <form onSubmit={handleCreateBlankProject}>
+                    <DialogHeader>
+                      <DialogTitle>Create New Project</DialogTitle>
+                      <DialogDescription>
+                        Enter a name for your new blank project
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="py-4">
+                      <Input
+                        placeholder="Untitled Project"
+                        value={newProjectName}
+                        onChange={(e) => setNewProjectName(e.target.value)}
+                        required
+                      />
+                    </div>
+                    <DialogFooter>
+                      <Button type="submit">Create Project</Button>
+                    </DialogFooter>
+                  </form>
+                </DialogContent>
+              </Dialog>
             </CardFooter>
           </Card>
 
@@ -50,7 +134,95 @@ export default function Dashboard() {
               <p className="text-sm text-muted-foreground">Select from our collection of pre-formatted templates</p>
             </CardContent>
             <CardFooter>
-              <Button>Browse Templates</Button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button>Browse Templates</Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <form onSubmit={handleCreateFromTemplate}>
+                    <DialogHeader>
+                      <DialogTitle>Choose a Template</DialogTitle>
+                      <DialogDescription>
+                        Select a template and name your project
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="py-4">
+                      <Input
+                        placeholder="Untitled Project"
+                        value={templateProjectName}
+                        onChange={(e) => setTemplateProjectName(e.target.value)}
+                        required
+                        className="mb-4"
+                      />
+
+                      <div className="flex justify-between items-center mb-4">
+                        <Tabs defaultValue="all" className="w-full">
+                          <TabsList>
+                            <TabsTrigger value="all">All</TabsTrigger>
+                            <TabsTrigger value="business">Business</TabsTrigger>
+                            <TabsTrigger value="personal">Personal</TabsTrigger>
+                            <TabsTrigger value="education">Education</TabsTrigger>
+                          </TabsList>
+
+                          <div className="flex justify-end mt-2">
+                            <Button
+                              variant="outline"
+                              size="icon"
+                              onClick={() => setIsTemplateGridView(true)}
+                              className={isTemplateGridView ? "bg-accent" : ""}
+                            >
+                              <LayoutGrid className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="icon"
+                              onClick={() => setIsTemplateGridView(false)}
+                              className={!isTemplateGridView ? "bg-accent" : ""}
+                            >
+                              <List className="h-4 w-4" />
+                            </Button>
+                          </div>
+
+                          <div className="h-[400px] overflow-y-auto">
+                            {Object.entries(templates).map(([category, items]) => (
+                              <TabsContent key={category} value={category}>
+                                {isTemplateGridView ? (
+                                  <div className="grid grid-cols-2 gap-4">
+                                    {items.map((template, i) => (
+                                      <Card key={i} className="cursor-pointer hover:border-primary">
+                                        <CardHeader>
+                                          <CardTitle className="text-base">{template.title}</CardTitle>
+                                        </CardHeader>
+                                        <CardContent>
+                                          <p className="text-sm text-muted-foreground">{template.description}</p>
+                                        </CardContent>
+                                      </Card>
+                                    ))}
+                                  </div>
+                                ) : (
+                                  <div className="flex flex-col gap-2">
+                                    {items.map((template, i) => (
+                                      <div key={i} className="flex items-center justify-between p-4 border rounded-lg cursor-pointer hover:border-primary">
+                                        <div>
+                                          <h3 className="font-medium">{template.title}</h3>
+                                          <p className="text-sm text-muted-foreground">{template.description}</p>
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                              </TabsContent>
+                            ))}
+                          </div>
+                        </Tabs>
+                      </div>
+                    </div>
+                    <DialogFooter>
+                      <Button type="submit">Create from Template</Button>
+                    </DialogFooter>
+                  </form>
+                </DialogContent>
+              </Dialog>
             </CardFooter>
           </Card>
         </div>
@@ -117,7 +289,7 @@ export default function Dashboard() {
                         </Button>
                       }
                       title={doc.title}
-                      // onDelete={() => handleDelete(doc.title)}
+                      onDelete={() => handleDelete(doc.title)}
                       type="document"
                     />
                   </div>
