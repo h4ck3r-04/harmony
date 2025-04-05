@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { LayoutGrid, List, MoreVertical, FileEdit, Trash2, Share2, FileText } from "lucide-react"
+import { LayoutGrid, List, MoreVertical, FileEdit, Trash2, Share2, FileText, Plus } from "lucide-react"
 import { useState } from "react"
 import { DeleteDialog } from "@/components/dialogs/delete-dialog";
 import { ShareDialog } from "@/components/dialogs/share-dialog";
@@ -106,77 +106,6 @@ export default function Dashboard() {
     education: templatesList.filter(t => t.category === 'education'),
     general: templatesList.filter(t => t.category === 'general')
   };
-
-  const NewProjectDialog = () => (
-    <DialogContent>
-      <DialogHeader>
-        <DialogTitle>Create New Project</DialogTitle>
-        <DialogDescription>Choose how you want to create your project</DialogDescription>
-      </DialogHeader>
-      <div className="flex gap-4">
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button className="flex-1">Blank Project</Button>
-          </DialogTrigger>
-          <DialogContent>
-            <form onSubmit={handleCreateBlankProject}>
-              <DialogHeader>
-                <DialogTitle>Create Blank Project</DialogTitle>
-                <DialogDescription>Enter a name for your new blank project</DialogDescription>
-              </DialogHeader>
-              <div className="py-4">
-                <Input
-                  placeholder="Untitled Project"
-                  value={newProjectName}
-                  onChange={(e) => setNewProjectName(e.target.value)}
-                  required
-                />
-                {formErrors.newProject && (
-                  <p className="text-sm text-red-500 mt-1">{formErrors.newProject}</p>
-                )}
-              </div>
-              <DialogFooter>
-                <Button type="submit">Create Project</Button>
-              </DialogFooter>
-            </form>
-          </DialogContent>
-        </Dialog>
-
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button className="flex-1">Use Template</Button>
-          </DialogTrigger>
-          <DialogContent>
-            <form onSubmit={handleCreateFromTemplate}>
-              <DialogHeader>
-                <DialogTitle>Choose a Template</DialogTitle>
-                <DialogDescription>Select a template and name your project</DialogDescription>
-              </DialogHeader>
-              <div className="py-4">
-                <Input
-                  placeholder="Untitled Project"
-                  value={templateProjectName}
-                  onChange={(e) => setTemplateProjectName(e.target.value)}
-                  required
-                  className="mb-4"
-                />
-                {formErrors.templateProject && (
-                  <p className="text-sm text-red-500 mt-1">{formErrors.templateProject}</p>
-                )}
-                {/* Template selection UI */}
-                <Tabs defaultValue="all" className="w-full">
-                  {/* ... Rest of the template selection UI ... */}
-                </Tabs>
-              </div>
-              <DialogFooter>
-                <Button type="submit">Create from Template</Button>
-              </DialogFooter>
-            </form>
-          </DialogContent>
-        </Dialog>
-      </div>
-    </DialogContent>
-  );
 
   return (
     <main className="min-h-[97vh] relative px-4">
@@ -678,6 +607,7 @@ export default function Dashboard() {
           </div>
         )}
       </div>
+
     </main>
   );
 }
